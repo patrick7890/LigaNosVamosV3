@@ -6,6 +6,8 @@
 package dto.dao;
 
 import dto.entidad.Usuario;
+import dto.entidad.TipoUsuario;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,10 +31,15 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
     public UsuarioFacade() {
         super(Usuario.class);
     }
-    public int buscarIdTipo(String nombre){
-        Query query = em.createQuery("select id_tipo_usuario from TipoUsuario where descripcion= :idTipo");
-        query.setParameter("idTipo",nombre);
-        
-        return query.getFirstResult();
+    public TipoUsuario buscarIdTipo(int tipo){
+        Query query = em.createQuery("select * from TipoUsuario where id_tipo_usuario= :idTipo");
+        query.setParameter("idTipo",tipo);
+        TipoUsuario t=new TipoUsuario();
+        List<TipoUsuario> des =query.getResultList();
+        for (TipoUsuario de : des) {
+            t.setIdTipoUsuario(de.getIdTipoUsuario());
+            t.setDescripcion(de.getDescripcion());
+        }
+        return t;
     }
 }

@@ -6,6 +6,7 @@
 package controlador;
 
 import dto.dao.UsuarioFacade;
+import dto.entidad.TipoUsuario;
 import dto.entidad.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -113,10 +114,10 @@ public class ServletUsuario extends HttpServlet {
             String nombre = request.getParameter("txtNombre");
             String correo = request.getParameter("txtCorreo");
             String pass = request.getParameter("txtPass");
-            String tipo = request.getParameter("ddlTipo");
-
+            int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
+            TipoUsuario t= usuarioFacade.buscarIdTipo(tipo);
             Usuario usuario = new Usuario(correo, nombre, pass);
-
+            usuario.setTipoUsuarioIdTipoUsuario(t);
             if (usuarioFacade.create(usuario)) {
                 String mensaje = "<div class='alert alert-success text-center'>Usuario Agregado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
