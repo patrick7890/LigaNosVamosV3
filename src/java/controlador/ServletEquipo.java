@@ -109,11 +109,9 @@ public class ServletEquipo extends HttpServlet {
         String nombre = request.getParameter("txtNombre");
         String nombreUsu = request.getParameter("txtNombreUsu");
         int idUsu = Integer.parseInt(request.getParameter("txtidUsu"));
-        String tipo = request.getParameter("ddlTipo");
-        int idTipo = usuarioFacade.buscarIdTipo(tipo);
-
+        int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
         byte estado = 0;
-        dto.entidad.Equipo e = new Equipo(nombre, estado, idUsu, idTipo);
+        dto.entidad.Equipo e = new Equipo(nombre, estado, idUsu, tipo);
         equipoFacade.create(e);
 //        if (equipoFacade.create(e)) {
 //            //imagen(request, response, e);

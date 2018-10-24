@@ -31,15 +31,24 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
     public UsuarioFacade() {
         super(Usuario.class);
     }
-    public TipoUsuario buscarIdTipo(int tipo){
-        Query query = em.createQuery("select * from TipoUsuario where id_tipo_usuario= :idTipo");
-        query.setParameter("idTipo",tipo);
-        TipoUsuario t=new TipoUsuario();
-        List<TipoUsuario> des =query.getResultList();
-        for (TipoUsuario de : des) {
-            t.setIdTipoUsuario(de.getIdTipoUsuario());
-            t.setDescripcion(de.getDescripcion());
-        }
+
+    public TipoUsuario buscarTipo(int tipo) {
+        Query query = em.createQuery("SELECT t FROM TipoUsuario t WHERE t.idTipoUsuario= :idTipo");
+        query.setParameter("idTipo", tipo);
+        TipoUsuario t = (TipoUsuario) query.getSingleResult();
         return t;
+    }
+
+    public Usuario login(String correo, String pass) {
+        try {
+            Query query=em.createNamedQuery("Usuario.Login");
+            query.setParameter("correoUsuario", correo);
+            query.setParameter("passUsuario", pass);
+            Usuario u = (Usuario) query.getSingleResult();
+            return u;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 }

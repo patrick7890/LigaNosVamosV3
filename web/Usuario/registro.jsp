@@ -58,7 +58,7 @@
                                 </div>
                                 <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
                                                    url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
-                                                   user = "juan"  password = "1234"/>
+                                                   user = "juan"  password = "123456"/>
 
 
                                 <sql:query var="tipos" dataSource="${nosvamos}">

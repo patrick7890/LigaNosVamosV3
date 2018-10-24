@@ -104,8 +104,25 @@ public class ServletUsuario extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void Login(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void Login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            String correo = request.getParameter("txtCorreo");
+            String pass = request.getParameter("txtPass");
+            Usuario u = usuarioFacade.login(correo, pass);
+            if (u!=null) {
+                request.getSession().setAttribute("sesUsu",u);
+                response.sendRedirect("Usuario/index.jsp");
+            } else {
+                String mensaje = "<div class='alert alert-danger text-center'>Correo o contraseña incorrecto</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+                request.getSession().setAttribute("correo", correo);
+                response.sendRedirect("Login.jsp");
+            }
+        } catch (Exception e) {
+            String mensaje = "<div class='alert alert-danger text-center'>Error inesperado </div>";
+            request.getSession().setAttribute("mensaje", mensaje);
+            response.sendRedirect("Login.jsp");
+        }
     }
 
     private void agregar(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -115,9 +132,7 @@ public class ServletUsuario extends HttpServlet {
             String correo = request.getParameter("txtCorreo");
             String pass = request.getParameter("txtPass");
             int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
-            TipoUsuario t= usuarioFacade.buscarIdTipo(tipo);
             Usuario usuario = new Usuario(correo, nombre, pass);
-            usuario.setTipoUsuarioIdTipoUsuario(t);
             if (usuarioFacade.create(usuario)) {
                 String mensaje = "<div class='alert alert-success text-center'>Usuario Agregado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
@@ -176,18 +191,17 @@ public class ServletUsuario extends HttpServlet {
             String correo = request.getParameter("txtCorreo");
             String pass = request.getParameter("txtPass");
             String tipo = request.getParameter("ddlTipo");
-            
+
             Usuario usuario = new Usuario(correo, nombre, pass);
-            
-           
-                if (usuarioFacade.edit(usuario)) {
-                    String mensaje = "<div class='alert alert-success text-center'>Usuario Actualizado</div>";
-                    request.getSession().setAttribute("mensaje", mensaje);
-                } else {
-                    String mensaje = "<div class='alert alert-danger text-center'>No se Pudo Actualizar</div>";
-                    request.getSession().setAttribute("mensaje", mensaje);
-                }
-            
+
+            if (usuarioFacade.edit(usuario)) {
+                String mensaje = "<div class='alert alert-success text-center'>Usuario Actualizado</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+            } else {
+                String mensaje = "<div class='alert alert-danger text-center'>No se Pudo Actualizar</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+            }
+
         } catch (Exception e) {
             String mensaje = "<div class='alert alert-danger text-center'>Ocurrio un error insesperado" + e.getMessage() + "</div>";
             request.getSession().setAttribute("mensaje", mensaje);
