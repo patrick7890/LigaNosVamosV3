@@ -16,7 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -75,8 +74,6 @@ public class Liga implements Serializable {
     @Size(max = 45)
     @Column(name = "ganador")
     private String ganador;
-    @ManyToMany(mappedBy = "ligaList")
-    private List<Match> matchList;
     @JoinColumn(name = "imagen_id_imagen", referencedColumnName = "id_imagen")
     @ManyToOne
     private Imagen imagenIdImagen;
@@ -85,6 +82,8 @@ public class Liga implements Serializable {
     private TipoLiga tipoLigaIdtipoLiga;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ligaLigaId")
     private List<Equipo> equipoList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ligaLigaId")
+    private List<Match> matchList;
 
     public Liga() {
     }
@@ -153,15 +152,6 @@ public class Liga implements Serializable {
         this.ganador = ganador;
     }
 
-    @XmlTransient
-    public List<Match> getMatchList() {
-        return matchList;
-    }
-
-    public void setMatchList(List<Match> matchList) {
-        this.matchList = matchList;
-    }
-
     public Imagen getImagenIdImagen() {
         return imagenIdImagen;
     }
@@ -185,6 +175,15 @@ public class Liga implements Serializable {
 
     public void setEquipoList(List<Equipo> equipoList) {
         this.equipoList = equipoList;
+    }
+
+    @XmlTransient
+    public List<Match> getMatchList() {
+        return matchList;
+    }
+
+    public void setMatchList(List<Match> matchList) {
+        this.matchList = matchList;
     }
 
     @Override

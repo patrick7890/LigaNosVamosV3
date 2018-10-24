@@ -84,7 +84,7 @@ public class Equipo implements Serializable {
         this.estadoEquipo = estadoEquipo;
     }
 
-    public Equipo(String nombre, byte estado, int idUsu, int idTipo) {
+    public Equipo(String nombre, byte estado, int idUsu, int tipo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -9,7 +9,6 @@ import dto.entidad.Liga;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
@@ -18,7 +17,7 @@ import javax.persistence.Query;
 @Stateless
 public class LigaFacade extends AbstractFacade<Liga> {
 
-    @PersistenceContext(unitName = "LigaNosVamosV2PU")
+    @PersistenceContext(unitName = "LigaNosVamosV3PU")
     private EntityManager em;
 
     @Override
@@ -29,12 +28,9 @@ public class LigaFacade extends AbstractFacade<Liga> {
     public LigaFacade() {
         super(Liga.class);
     }
-    public int buscarIdTipo(String nombre) {
-        Query query = em.createQuery("select id_tipo_usuario from TipoUsuario where descripcion= :idTipo");
-        query.setParameter("idTipo", nombre);
 
-        return query.getFirstResult();
+    public int buscarIdTipo(String tipo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
     
 }

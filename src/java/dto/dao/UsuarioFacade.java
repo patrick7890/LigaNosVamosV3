@@ -6,8 +6,6 @@
 package dto.dao;
 
 import dto.entidad.Usuario;
-import dto.entidad.TipoUsuario;
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,7 +18,7 @@ import javax.persistence.Query;
 @Stateless
 public class UsuarioFacade extends AbstractFacade<Usuario> {
 
-    @PersistenceContext(unitName = "LigaNosVamosV2PU")
+    @PersistenceContext(unitName = "LigaNosVamosV3PU")
     private EntityManager em;
 
     @Override
@@ -32,23 +30,12 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         super(Usuario.class);
     }
 
-    public TipoUsuario buscarTipo(int tipo) {
-        Query query = em.createQuery("SELECT t FROM TipoUsuario t WHERE t.idTipoUsuario= :idTipo");
-        query.setParameter("idTipo", tipo);
-        TipoUsuario t = (TipoUsuario) query.getSingleResult();
-        return t;
-    }
-
-    public Usuario login(String correo, String pass) {
-        try {
-            Query query=em.createNamedQuery("Usuario.Login");
-            query.setParameter("correoUsuario", correo);
-            query.setParameter("passUsuario", pass);
-            Usuario u = (Usuario) query.getSingleResult();
-            return u;
-        } catch (Exception e) {
-            return null;
-        }
+    public boolean login(String correo, String pass) {
+        Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.correoUsuario= :correoUsuario and u.passUsuario= :passUsuario");
+        query.setParameter("correoUsuario", correo);
+        query.setParameter("passUsuario", pass);
+        return query.getResultList().size() > 0;
 
     }
+
 }

@@ -108,8 +108,8 @@ public class ServletUsuario extends HttpServlet {
         try {
             String correo = request.getParameter("txtCorreo");
             String pass = request.getParameter("txtPass");
-            Usuario u = usuarioFacade.login(correo, pass);
-            if (u!=null) {
+            boolean u = usuarioFacade.login(correo, pass);
+            if (u) {
                 request.getSession().setAttribute("sesUsu",u);
                 response.sendRedirect("Usuario/index.jsp");
             } else {
