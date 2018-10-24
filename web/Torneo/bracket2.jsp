@@ -6,7 +6,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">-->
+    <link href="../Recursos/fontawesome/css/all.min.css" rel="stylesheet" type="text/css"/>
     <link href='https://fonts.googleapis.com/css?family=Holtwood+One+SC' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Kaushan+Script|Herr+Von+Muellerhoff' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
@@ -15,32 +16,31 @@
     <title>March Madness Stock Matchup</title>
 </head>
 <body>
+
     <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
                        url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
-                       user = "juan"  password = "1234"/>
+                       user = "juan"  password = "123456"/>
 
-
+    <sql:query var="Liga" dataSource="${nosvamos}">
+        SELECT nombre_liga,lugar ,ganador, DATE_FORMAT(fecha_inicio,'%Y') AS anio FROM liga where liga_id='${idliga}'
+    </sql:query>
     <sql:query var="fechas" dataSource="${nosvamos}">
         SELECT 
         DISTINCT(fecha_match)
-        ,DATE_FORMAT(fecha_match,'%W %d') AS fecha
-        , DATE_FORMAT(l.fecha_inicio,'%Y') AS anio 
-        ,nombre_liga
+        ,liga_id
+        ,DATE_FORMAT(fecha_match,'%M %W %d') AS fecha
         FROM `match` 
         JOIN liga l on l.liga_id=match.liga_liga_id 
-        WHERE liga_liga_id='1' 
+        WHERE liga_liga_id='${idliga}' 
     </sql:query>
-    <jsp:useBean id="now" class="java.util.Date" />
-    <fmt:formatDate var="year" value="${now}" pattern="yyyy" />
     <header class="hero">
         <div class="hero-wrap">
-            <c:forEach var="list" items="${fechas.rows}" end="0">
+            <c:forEach var="list" items="${Liga.rows}">
                 <p class="intro" id="intro"><c:out value="${list.nombre_liga}"/></p>
                 <h1 id="headline">Tournament</h1>
-                <p class="year"><i class="fa fa-star"></i> ${list.anio} <i class="fa fa-star"></i></p>
-                </c:forEach>
-
-            <p>Ballin' Outta Control</p>
+                <p class="year"><i class="fas fa-star"></i> ${list.anio} <i class="fas fa-star"></i></p>
+                <p>${list.lugar}</p>
+            </c:forEach>
         </div>
     </header>
     <style>
@@ -198,159 +198,91 @@
     <section id="bracket">
         <div class="container">
             <div class="split split-one">
-                <c:forEach var="f" items="${fechas.rows}" begin="0" end="3" varStatus="loop">
-                    <c:if test="${f.fecha_match==null}">
-                        
-                    </c:if>
+                <c:forEach var="f" items="${fechas.rows}" varStatus="loop">
                     <sql:query var="result" dataSource="${nosvamos}">
                         SELECT l.nombre_liga,
                         GROUP_CONCAT(e.nombre_equipo) AS "equipos",
                         m.match
                         FROM `match` AS m JOIN equipo AS e on m.equipo_equipo_id=e.equipo_id 
                         JOIN liga l on l.liga_id=m.liga_liga_id 
-                        WHERE m.liga_liga_id='1' and m.fecha_match='${f.fecha_match}'
+                        WHERE m.liga_liga_id='${f.liga_id}' and m.fecha_match='${f.fecha_match}'
                         GROUP by m.fecha_match, m.match
                     </sql:query>
                     <c:choose>
                         <c:when test="${loop.count==1}">
                             <div class="round round-one current">
-                                <div class="round-details">Round 1<br/><span class="date">${f.fecha}</span></div>
-                                </c:when>
-                                <c:when test="${loop.count==2}">
-                                <div class="round round round-two current">
-                                    <div class="round-details">Round 2<br/><span class="date">${f.fecha}</span></div>
-                                    </c:when>
-                                    <c:when test="${loop.count==3}">
-                                    <div class="round round-three current">
-                                        <div class="round-details">Round 1<br/><span class="date">${f.fecha}</span></div>
-                                        </c:when>
-                                    </c:choose>
-                                    <c:forEach var="list" items="${result.rows}">
-
+                                <div class="round-details">Ronda 1<br/><span class="date">${f.fecha}</span></div>
+                                    <c:forEach var="list" items="${result.rows}" end="7" varStatus="r1">
                                     <ul class="matchup">
                                         <li class="team team-top"><c:out value="${fn:substringBefore(list.equipos, ',')}"/> </li>
                                         <li class="team team-bottom"><c:out value="${fn:substringAfter(list.equipos, ',')}"/></li>
                                     </ul>
                                 </c:forEach>
-                            </div>
-                        </c:forEach>
+                            </c:when>
+                            <c:when test="${loop.count==2}">
+                                <div class="round round round-two current" >
+                                    <div class="round-details">Ronda 2<br/><span class="date">${f.fecha}</span></div>
+                                        <c:forEach var="list" items="${result.rows}"end="3" varStatus="r2">
+                                            
+                                        <ul class="matchup">
+                                            <li class="team team-top"><c:out value="${fn:substringBefore(list.equipos, ',')}"/> </li>
+                                            <li class="team team-bottom"><c:out value="${fn:substringAfter(list.equipos, ',')}"/></li>
+                                        </ul>
+                                    </c:forEach>
+                                </c:when>
+                                <c:when test="${loop.count==3}">
 
-                        <div class="round round-three">
-                            <div class="round-details">Round 3<br/><span class="date">March 22</span></div>			
-                            <ul class="matchup">
-                                <li class="team team-top">&nbsp;<span class="score">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="score">&nbsp;</span></li>
-                            </ul>	
-                            <ul class="matchup">
-                                <li class="team team-top">&nbsp;<span class="score">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="score">&nbsp;</span></li>
-                            </ul>										
-                        </div>	<!-- END ROUND THREE -->		
-                    </div> 
+                                    <div class="round round-three current">
+                                        <div class="round-details">Ronda 3<br/><span class="date">${f.fecha}</span></div>
+                                            <c:forEach var="list" items="${result.rows}" end="1" varStatus="r3"> 
+                                            <ul class="matchup">
+                                                <li class="team team-top"><c:out value="${fn:substringBefore(list.equipos, ',')}"/></li>
+                                                <li class="team team-bottom"><c:out value="${fn:substringAfter(list.equipos, ',')}"/></li>
+                                            </ul>
+                                        </c:forEach>
 
-                    <div class="champion">
-                        <div class="semis-l">
-                            <div class="round-details">west semifinals <br/><span class="date">March 26-28</span></div>		
-                            <ul class ="matchup championship">
-                                <li class="team team-top">&nbsp;<span class="vote-count">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="vote-count">&nbsp;</span></li>
-                            </ul>
+                                    </c:when>
+                                    <c:when test="${loop.count==4}">
+                                    </div>
+                                    <div class="champion">
+                                        <div class="final current">
+                                            <div class="round-details">Campionato <br/><span class="date">${f.fecha}</span></div>		
+                                                <c:forEach var="list" items="${result.rows}">
+                                                <ul class="matchup champion">
+                                                    <li class="team team-top"><c:out value="${fn:substringBefore(list.equipos, ',')}"/> </li>
+                                                    <li class="team team-bottom"><c:out value="${fn:substringAfter(list.equipos, ',')}"/></li>
+                                                </ul>
+                                            </c:forEach>
+                                        </c:when>
+                                    </c:choose>
+                                </div> 
+                            </c:forEach>
                         </div>
-                        <div class="final">
-                            <i class="fa fa-trophy"></i>
-                            <div class="round-details">championship <br/><span class="date">March 30 - Apr. 1</span></div>		
-                            <ul class ="matchup championship">
-                                <li class="team team-top">&nbsp;<span class="vote-count">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="vote-count">&nbsp;</span></li>
-                            </ul>
-                        </div>
-                        <div class="semis-r">		
-                            <div class="round-details">east semifinals <br/><span class="date">March 26-28</span></div>		
-                            <ul class ="matchup championship">
-                                <li class="team team-top">&nbsp;<span class="vote-count">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="vote-count">&nbsp;</span></li>
-                            </ul>
-                        </div>	
-                    </div>
+                        <c:forEach var="l" items="${Liga.rows}"> 
+                            <c:if test="${l.ganador!=null}">
+                                <div class="split split-two" style="margin-left: 10px">
+                                    <div class="champion">                                            
+                                        <div class="final current">
+                                            <i class="fas fa-trophy"></i>
+                                            <div class="round-details "><h2>Campion</h2></div>						
+                                            <ul class="matchup">
+                                                <li class="team team-top"><c:out value="${l.ganador}"/> </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+                        </c:forEach>	
 
-
-                    <div class="split split-two">
-
-
-                        <div class="round round-three">
-                            <div class="round-details">Round 3<br/><span class="date">March 22</span></div>						
-                            <ul class="matchup">
-                                <li class="team team-top">&nbsp;<span class="score">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="score">&nbsp;</span></li>
-                            </ul>	
-                            <ul class="matchup">
-                                <li class="team team-top">&nbsp;<span class="score">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="score">&nbsp;</span></li>
-                            </ul>										
-                        </div>	<!-- END ROUND THREE -->	
-
-                        <div class="round round-two">
-                            <div class="round-details">Round 2<br/><span class="date">March 18</span></div>						
-                            <ul class="matchup">
-                                <li class="team team-top">&nbsp;<span class="score">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="score">&nbsp;</span></li>
-                            </ul>	
-                            <ul class="matchup">
-                                <li class="team team-top">&nbsp;<span class="score">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="score">&nbsp;</span></li>
-                            </ul>	
-                            <ul class="matchup">
-                                <li class="team team-top">&nbsp;<span class="score">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="score">&nbsp;</span></li>
-                            </ul>
-                            <ul class="matchup">
-                                <li class="team team-top">&nbsp;<span class="score">&nbsp;</span></li>
-                                <li class="team team-bottom">&nbsp;<span class="score">&nbsp;</span></li>
-                            </ul>										
-                        </div>	<!-- END ROUND TWO -->
-                        <div class="round round-one current">
-                            <div class="round-details">Round 1<br/><span class="date">March 16</span></div>
-                            <ul class="matchup">
-                                <li class="team team-top">Minnesota<span class="score">62</span></li>
-                                <li class="team team-bottom">Northwestern<span class="score">54</span></li>
-                            </ul>
-                            <ul class="matchup">
-                                <li class="team team-top">Michigan<span class="score">68</span></li>
-                                <li class="team team-bottom">Iowa<span class="score">66</span></li>
-                            </ul>
-                            <ul class="matchup">
-                                <li class="team team-top">Illinois<span class="score">64</span></li>
-                                <li class="team team-bottom">Wisconsin<span class="score">56</span></li>
-                            </ul>
-                            <ul class="matchup">
-                                <li class="team team-top">Purdue<span class="score">36</span></li>
-                                <li class="team team-bottom">Boise State<span class="score">40</span></li>
-                            </ul>			
-                            <ul class="matchup">
-                                <li class="team team-top">Penn State<span class="score">38</span></li>
-                                <li class="team team-bottom">Indiana<span class="score">44</span></li>
-                            </ul>	
-                            <ul class="matchup">
-                                <li class="team team-top">Ohio State<span class="score">52</span></li>
-                                <li class="team team-bottom">VCU<span class="score">80</span></li>
-                            </ul>	
-                            <ul class="matchup">
-                                <li class="team team-top">USC<span class="score">58</span></li>
-                                <li class="team team-bottom">Cal<span class="score">59</span></li>
-                            </ul>
-                            <ul class="matchup">
-                                <li class="team team-top">Virginia Tech<span class="score">74</span></li>
-                                <li class="team team-bottom">Dartmouth<span class="score">111</span></li>
-                            </ul>										
-                        </div>	<!-- END ROUND ONE -->          				
                     </div>
                 </div>
-
-                </section>
-                <section class="share">
-                    <div class="share-wrap">
-                        <a class="share-icon" href="https://twitter.com/basement47"><i class="fa fa-twitter"></i></a>
-                        <a class="share-icon" href="#"><i class="fa fa-facebook"></i></a>
-                        <a class="share-icon" href="#"><i class="fa fa-envelope"></i></a>
-                    </div>
-                </section>
+            </div>
+        </div>
+    </section>
+    <section class="share">
+        <div class="share-wrap">
+            <a class="share-icon" href="https://twitter.com/basement47"><i class="fab fa-twitter"></i></a>
+            <a class="share-icon" href="#"><i class="fab fa-facebook"></i></a>
+            <a class="share-icon" href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+    </section>

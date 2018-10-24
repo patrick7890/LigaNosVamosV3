@@ -56,9 +56,8 @@ public class ServletLiga extends HttpServlet {
                 actualizar(request, response);
                 break;
             default:
-                throw new AssertionError();
+                redirectLiga(request, response);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -203,6 +202,16 @@ public class ServletLiga extends HttpServlet {
             request.getSession().setAttribute("mensaje", mensaje);
         } finally {
             listar(request, response);
+        }
+    }
+
+    private void redirectLiga(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            String Liga = request.getParameter("idLiga");
+            request.getSession().setAttribute("idliga", Liga);
+            response.sendRedirect("Torneo/bracket2.jsp");
+        } catch (Exception e) {
+             response.sendRedirect("index.jsp");
         }
     }
 

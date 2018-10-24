@@ -36,7 +36,7 @@
         <div class="form-group" style="margin: 1%">
             <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
                                url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
-                               user = "juan"  password = "1234"/>
+                               user = "juan"  password = "123456"/>
 
 
             <sql:query var="ligas" dataSource="${nosvamos}">
@@ -46,29 +46,27 @@
             <div class="row">
                 <c:forEach var="list" items="${ligas.rows}">
                     <div class=" col-12 col-sm-12 col-md-6 col-xl-4 mt-2 " style="height: 100px" >
-                        <form>
-                            <a href="Ligas/listaEquipos.jsp?${list.nombre_liga}">
-                                <div class="thumbnail group group-thumbnail"  style="height: 100px" >
-                                    <style>
-                                        .group-thumbnail{
-                                            background-image: url('Recursos/img/Dota.PNG');
-                                            background-size: cover;
-                                            width: 60%;
-                                            height: 60%;
-                                            content: "";
-                                            position: absolute;
-                                            background-position: 50%;
-                                            z-index: 0;
-                                        }
-                                    </style>
-                                    <div class="thumbnail-title">
-                                        <h4 class="text-truncate" title="${list.nombre_liga}" ><c:out value="${list.nombre_liga}"/></h4>
-                                    </div>
-                                    <span class="">${list.fecha_inicio}</span>
-                                    <span class="">${list.fecha_termino}</span>
+                        <a href="ProcesoLiga?btnAccion=null&idLiga=${list.liga_id}">
+                            <div class="thumbnail group group-thumbnail"  style="height: 100px" >
+                                <style>
+                                    .group-thumbnail{
+                                        background-image: url('Recursos/img/Dota.PNG');
+                                        background-size: cover;
+                                        width: 60%;
+                                        height: 60%;
+                                        content: "";
+                                        position: absolute;
+                                        background-position: 50%;
+                                        z-index: 0;
+                                    }
+                                </style>
+                                <div class="thumbnail-title">
+                                    <h4 class="text-truncate" title="${list.nombre_liga}" ><c:out value="${list.nombre_liga}"/></h4>
                                 </div>
-                            </a>
-                        </form>
+                                <span class="">${list.fecha_inicio}</span>
+                                <span class="">${list.fecha_termino}</span>
+                            </div>
+                        </a>
                     </div>
                 </c:forEach>
             </div>
