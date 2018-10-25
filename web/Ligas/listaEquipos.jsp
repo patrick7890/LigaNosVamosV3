@@ -30,8 +30,22 @@
             </c:when>
         </c:choose>
         <div class="form-group" style="margin: 1%">
-            <jsp:useBean id="li" class="DAO.DAOEquipo" scope="page" ></jsp:useBean>
-            <c:set  var="lista"  value="${li.listarTodo()}"/>
+           
+            
+           
+            
+            
+             <div class="form-group" style="margin: 1%">
+            <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
+                               url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
+                               user = "juan"  password = "123456"/>
+
+
+            <sql:query var="lista" dataSource="${nosvamos}">
+                SELECT * FROM equipo
+            </sql:query>
+            
+            
             <div class="row">
                 <c:forEach var="list" items="${lista}">
                     <div class=" col-12 col-sm-12 col-md-6 col-xl-4 mt-2 " style="height: 100px" >

@@ -24,10 +24,10 @@
     <body>
 
         <c:choose>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()>2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <c:redirect url="../Index.jsp"></c:redirect>
             </c:when>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()<=2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
                 <jsp:include page="../Menus/menu_Admin.jsp"></jsp:include>
             </c:when>
             <c:when test="${sesUsu==null}">

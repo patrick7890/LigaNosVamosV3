@@ -100,8 +100,20 @@ public class Liga implements Serializable {
         this.lugar = lugar;
     }
 
-    public Liga(String nombreLiga, java.sql.Date fechaini, java.sql.Date fechater, String lugar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Liga(String nombreLiga, Date fechaini, Date fechater, String lugar) {
+        this.nombreLiga = nombreLiga;
+        this.fechaInicio = fechaini;
+        this.fechaTermino = fechater;
+        this.lugar = lugar;
+    }
+
+    public Liga(Integer id, String nombreLiga,Date fechaini, Date fechater, String lugar, TipoLiga t) {
+        this.ligaId = id;
+        this.nombreLiga = nombreLiga;
+        this.fechaInicio = fechaini;
+        this.fechaTermino = fechater;
+        this.lugar = lugar;
+        this.tipoLigaIdtipoLiga=t;
     }
 
     public Integer getLigaId() {

@@ -11,10 +11,15 @@
     Author     : Lennon
 --%>
 
-<%@page import="dto.TipoLiga"%>
-<%@page import="java.util.List"%>
-<%@page import="DAO.DAOLiga"%>
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"  %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,10 +30,10 @@
     </head>
     <body>
         <c:choose>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()>2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>
             </c:when>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()<=2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
                 <jsp:include page="../Menus/menu_Admin.jsp"></jsp:include>
             </c:when>
         </c:choose>
@@ -61,13 +66,17 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Tipo Liga: </label>
-                                    <jsp:useBean id="li" class="DAO.DAOLiga" scope="page" ></jsp:useBean>
-                                    <c:set  var="lista"  value="${li.ListarTipo()}"/>
+                                    <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
+                                                       url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
+                                                       user = "juan"  password = "123456"/>
+                                    <sql:query var="Lista" dataSource="${nosvamos}">
+                                        SELECT * FROM TIPO_LIGA
+                                    </sql:query>
                                     <select class="form-control" name="ddlTipo">
                                         <option>Elige Una Opcion</option>
-                                        <c:forEach var="list" items="${lista}">
-                                            <option value="${list.getIdtipoLiga()}">
-                                                <c:out value="${list.getDescripcion()}"/>
+                                        <c:forEach var="list" items="${Lista.rows}">
+                                            <option value="${list.idtipo_liga}">
+                                                <c:out value="${list.descripcion}"/>
                                             </option>
                                         </c:forEach>
                                     </select>

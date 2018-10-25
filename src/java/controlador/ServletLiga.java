@@ -6,6 +6,7 @@
 package controlador;
 
 import dto.dao.LigaFacade;
+import dto.dao.TipoLigaFacade;
 import dto.entidad.Liga;
 import dto.entidad.TipoLiga;
 import java.io.IOException;
@@ -27,6 +28,8 @@ public class ServletLiga extends HttpServlet {
 
     @EJB
     private LigaFacade ligaFacade;
+    @EJB
+    private TipoLigaFacade TligaFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -105,13 +108,11 @@ public class ServletLiga extends HttpServlet {
             Date fechaini = Date.valueOf(request.getParameter("dateFechaIni"));
             Date fechater = Date.valueOf(request.getParameter("dateFechaTer"));
             String lugar = request.getParameter("txtLugar");
-            String tipo = request.getParameter("ddlTipo");
+            int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
 
-            int idTipo = ligaFacade.buscarIdTipo(tipo);
+            TipoLiga t=TligaFacade.find(tipo);
 
-            dto.entidad.TipoLiga tipoLiga = new TipoLiga(idTipo, tipo);
-            Liga l = new Liga(nombreLiga, fechaini, fechater, lugar);
-            l.setTipoLigaIdtipoLiga(tipoLiga);
+            Liga l = new Liga(null,nombreLiga, fechaini, fechater, lugar,t);
             if (ligaFacade.create(l)) {
                 String mensaje = "<div class='alert alert-success text-center'>Liga Agregado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
@@ -182,13 +183,11 @@ public class ServletLiga extends HttpServlet {
             Date fechaini = Date.valueOf(request.getParameter("dateFechaIni"));
             Date fechater = Date.valueOf(request.getParameter("dateFechaTer"));
             String lugar = request.getParameter("txtLugar");
-            String tipo = request.getParameter("ddlTipo");
-            int idTipo = ligaFacade.buscarIdTipo(tipo);
+            int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
 
-            dto.entidad.TipoLiga tipoLiga = new TipoLiga(idTipo, tipo);
-            Liga l = new Liga(nombreLiga, fechaini, fechater, lugar);
-            l.setTipoLigaIdtipoLiga(tipoLiga);
-
+            TipoLiga t=TligaFacade.find(tipo);
+            Liga l = new Liga(null,nombreLiga, fechaini, fechater, lugar,t);
+            
             if (ligaFacade.edit(l)) {
                 String mensaje = "<div class='alert alert-success text-center'>Liga Actualizado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
@@ -211,7 +210,7 @@ public class ServletLiga extends HttpServlet {
             request.getSession().setAttribute("idliga", Liga);
             response.sendRedirect("Torneo/bracket2.jsp");
         } catch (Exception e) {
-             response.sendRedirect("index.jsp");
+            response.sendRedirect("index.jsp");
         }
     }
 

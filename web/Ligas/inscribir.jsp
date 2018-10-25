@@ -7,6 +7,11 @@
     Created on : 10-09-2018, 17:42:28
     Author     : Lennon
 --%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"  %>
+<%@page import="java.util.List"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -22,6 +27,7 @@
         <c:set  var="li"  value="${liga.listarTodo()}"/>
         <c:set var="correo" value="${sesUsu.getCorreoUsuario()}"/> 
         <c:set  var="equipoUsu"  value="${equ.listarEquipoUsuario(correo)}"/>
+        
         <c:choose>
             <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()>2}">
                 <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>

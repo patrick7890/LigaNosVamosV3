@@ -29,8 +29,6 @@ public class LigaFacade extends AbstractFacade<Liga> {
         super(Liga.class);
     }
 
-    public int buscarIdTipo(String tipo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
     
 }
