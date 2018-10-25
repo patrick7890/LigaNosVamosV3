@@ -84,8 +84,19 @@ public class Equipo implements Serializable {
         this.estadoEquipo = estadoEquipo;
     }
 
-    public Equipo(String nombre, byte estado, int idUsu, int tipo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Equipo(String nombre, byte estado, Usuario usu, TipoLiga tipo) {
+        this.nombreEquipo = nombre;
+        this.estadoEquipo = estado;
+        this.usuarioUsuarioId = usu;
+        this.tipoLigaIdtipoLiga = tipo;
+    }
+
+    public Equipo(Integer id, String nombre, byte estado, Usuario u, TipoLiga t) {
+        this.equipoId = id;
+        this.nombreEquipo = nombre;
+        this.estadoEquipo = estado;
+        this.usuarioUsuarioId = u;
+        this.tipoLigaIdtipoLiga = t;
     }
 
     public Integer getEquipoId() {
@@ -186,5 +197,5 @@ public class Equipo implements Serializable {
     public String toString() {
         return "dto.entidad.Equipo[ equipoId=" + equipoId + " ]";
     }
-    
+
 }

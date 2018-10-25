@@ -6,8 +6,11 @@
 package controlador;
 
 import dto.dao.EquipoFacade;
+import dto.dao.TipoLigaFacade;
 import dto.dao.UsuarioFacade;
 import dto.entidad.Equipo;
+import dto.entidad.TipoLiga;
+import dto.entidad.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -29,6 +32,8 @@ public class ServletEquipo extends HttpServlet {
 
     @EJB
     private EquipoFacade equipoFacade;
+    @EJB
+    private TipoLigaFacade TipoLigaFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -105,33 +110,40 @@ public class ServletEquipo extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void agregar(HttpServletRequest request, HttpServletResponse response) {
-        String nombre = request.getParameter("txtNombre");
-        String nombreUsu = request.getParameter("txtNombreUsu");
-        int idUsu = Integer.parseInt(request.getParameter("txtidUsu"));
-        int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
-        byte estado = 0;
-        Equipo e = new Equipo(nombre, estado, idUsu, tipo);
-        equipoFacade.create(e);
-//        if (equipoFacade.create(e)) {
-//            //imagen(request, response, e);
-//
-//            String mensaje = "<div class='alert alert-success text-center'>Equipo Agregado</div>";
-//            request.getSession().setAttribute("mensaje", mensaje);
-//
-//        } else {
-//            String mensaje = "<div class='alert alert-danger text-center'>No se Pudo Registar</div>";
-//            request.getSession().setAttribute("mensaje", mensaje);
-//        }
+    private void agregar(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+
+            String nombre = request.getParameter("txtNombre");
+            int idUsu = Integer.parseInt(request.getParameter("txtidUsu"));
+            int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
+            byte estado = 0;
+            Usuario u = usuarioFacade.find(idUsu);
+            TipoLiga t = TipoLigaFacade.find(tipo);
+            Equipo e = new Equipo(null, nombre, estado, u, t);
+
+            if (equipoFacade.create(e)) {
+                //imagen(request, response, e);
+
+                String mensaje = "<div class='alert alert-success text-center'>Equipo Agregado</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+
+            } else {
+                String mensaje = "<div class='alert alert-danger text-center'>No se Pudo Registar</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+            }
+        } catch (Exception e) {
+        } finally {
+            response.sendRedirect("Equipos/registro.jsp");
+        }
 
     }
 
     private void eliminar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             int id = Integer.parseInt(request.getParameter("idUsu"));
-            
+
             Equipo equipo = equipoFacade.find(id);
-           
+
             if (equipoFacade.remove(equipo)) {
                 String mensaje = "<div class='alert alert-success text-center'>Equipo Eliminado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
@@ -145,14 +157,12 @@ public class ServletEquipo extends HttpServlet {
         } finally {
             listar(request, response);
         }
-        
-        
-        
+
     }
 
     private void listar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            
+
             if (equipoFacade.findAll() != null) {
                 request.getSession().setAttribute("listaUsu", equipoFacade.findAll());
             } else {
@@ -165,7 +175,7 @@ public class ServletEquipo extends HttpServlet {
         } finally {
             response.sendRedirect("Equipos/administrar.jsp");
         }
-        
+
     }
 
     private void actualizar(HttpServletRequest request, HttpServletResponse response) {

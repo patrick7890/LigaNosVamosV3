@@ -1,3 +1,4 @@
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:if test="${sesUsu==null}">
     <c:redirect url="/Index.jsp"></c:redirect>
@@ -7,9 +8,6 @@ Document   : registro
 Created on : 04-sep-2018, 14:30:53
 Author     : Duoc
 --%>
-<%@page import="dto.TipoLiga"%>
-<%@page import="java.util.List"%>
-<%@page import="DAO.DAOLiga"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -19,10 +17,10 @@ Author     : Duoc
     </head>
     <body>
         <c:choose>
-            <c:when test="${sesUsu.tipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>
             </c:when>
-            <c:when test="${sesUsu.tipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
                 <jsp:include page="../Menus/menu_Admin.jsp"></jsp:include>
             </c:when>
         </c:choose>
@@ -39,34 +37,40 @@ Author     : Duoc
                                 <div class="form-group">
                                     <label>Nombre De Equipo: </label>
                                     <input type="text" name="txtNombre" placeholder="Ej:Juan" minlength="4" class="form-control"/>
-                                    <input type="hidden" name="txtNombreUsu" value="${sesUsu.getCorreoUsuario()}"/>
+                                    <input type="hidden" name="txtidUsu" value="${sesUsu.getUsuarioId()}"/>
                                 </div>
 
-                               <!-- <div class="form-group " >
-                                    <label>Ingrese la Imagen de Equipo </label>
-                                    <input class="btn btn-default" type="file" name="selec"  onchange="loadFile(event)" />
-                                </div>
-
-
-                                <div class="form-group" >
-                                    <img id="output"/>
-                                    <script>
-                                        var loadFile = function (event) {
-                                            var output = document.getElementById('output');
-                                            output.src = URL.createObjectURL(event.target.files[0]);
-                                        };
-                                    </script>
-                                </div>-->
+                                <!-- <div class="form-group " >
+                                     <label>Ingrese la Imagen de Equipo </label>
+                                     <input class="btn btn-default" type="file" name="selec"  onchange="loadFile(event)" />
+                                 </div>
+ 
+ 
+                                 <div class="form-group" >
+                                     <img id="output"/>
+                                     <script>
+                                         var loadFile = function (event) {
+                                             var output = document.getElementById('output');
+                                             output.src = URL.createObjectURL(event.target.files[0]);
+                                         };
+                                     </script>
+                                 </div>-->
 
                                 <div class="form-group">
                                     <label>Tipo Liga: </label>
-                                    <jsp:useBean id="li" class="DAO.DAOLiga" scope="page" ></jsp:useBean>
-                                    <c:set  var="lista"  value="${li.ListarTipo()}"/>
+                                    <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
+                                                       url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
+                                                       user = "juan"  password = "123456"/>
+
+
+                                    <sql:query var="tipos" dataSource="${nosvamos}">
+                                        SELECT * FROM tipo_liga
+                                    </sql:query>
                                     <select class="form-control" name="ddlTipo">
                                         <option>Elige Una Opcion</option>
-                                        <c:forEach var="list" items="${lista}">
-                                            <option value="${list.getIdtipoLiga()}">
-                                                <c:out value="${list.getDescripcion()}"/>
+                                        <c:forEach var="list" items="${tipos.rows}">
+                                            <option value="${list.idtipo_Liga}">
+                                                <c:out value="${list.descripcion}"/>
                                             </option>
                                         </c:forEach>
 

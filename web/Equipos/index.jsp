@@ -1,3 +1,4 @@
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:if test="${sesUsu==null}">
     <c:redirect url="/Index.jsp"></c:redirect>
@@ -17,20 +18,24 @@
     </head>
     <body>
         <c:choose>
-            <c:when test="${sesUsu.tipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>
             </c:when>
-            <c:when test="${sesUsu.tipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
                 <jsp:include page="../Menus/menu_Admin.jsp"></jsp:include>
             </c:when>
         </c:choose>
 
         <div class="container">
-            <jsp:useBean id="li" class="DAO.DAOEquipo" scope="page" ></jsp:useBean>
-            <c:set  var="usu"  value="${sesUsu.getCorreoUsuario()}"/>
-            <c:set  var="lista"  value="${li.listarEquipoUsuario(usu)}"/>
+            <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
+                               url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
+                               user = "juan"  password = "123456"/>
+            
+            <sql:query var="lista" dataSource="${nosvamos}">
+                    SELECT * FROM Equipo e JOIN Liga l on e.liga_liga_id=l.liga_id where usuario_usuario_id='${sesUsu.getUsuarioId()}'
+                </sql:query>
             <div class="row">
-                <c:forEach var="list" items="${lista}">
+                <c:forEach var="list" items="${lista.rows}">
                     <div class=" col-12 col-sm-12 col-md-6 col-xl-4 mt-2 " style="height: 100px" >
 
                         <div class="thumbnail group group-thumbnail"  style="height: 100px" >
@@ -47,15 +52,15 @@
                                 }
                             </style>
                             <div class="thumbnail-title">
-                                <a href="administar.jsp">    <h4 class="text-truncate" >${list.getNombreEquipo()}</h4></a>
+                                <a href="administar.jsp">    <h4 class="text-truncate" >${list.nombre_equipo}</h4></a>
                             </div>
                             <div class="text-center">
                                 <span style=" color: white"><p>Liga actual :</p>
                                     <c:choose>
-                                        <c:when test="${list.getLiga().getNombreLiga()!=null}">
-                                            <a href="/LigaNosVamos/Ligas/listaEquipos.jsp?${list.getLiga().getNombreLiga()}"><c:out value="${list.getLiga().getNombreLiga()}"/></a>
+                                        <c:when test="${list.nombre_liga!=null}">
+                                            <a href="/LigaNosVamosV3/ProcesoLiga?btnAccion=null&idLiga=${list.liga_id}"><c:out value="${list.nombre_liga}"/></a>
                                         </c:when>
-                                        <c:when test="${list.getLiga().getNombreLiga()==null}">
+                                        <c:when test="${list.nombre_liga==null}">
                                             <p>Ninguna</p>
                                         </c:when>
                                     </c:choose> 

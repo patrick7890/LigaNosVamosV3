@@ -20,14 +20,15 @@
     <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
                        url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
                        user = "juan"  password = "123456"/>
-
-
-
     <body>
         <c:choose>
             <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <sql:query var="equipoUsu" dataSource="${nosvamos}">
-                    SELECT * FROM Equipo where correo_usuario=${sesUsu.getCorreoUsuario()}
+                     SELECT * FROM Equipo e 
+                    LEFT JOIN Usuario on  e.usuario_usuario_id=usuario_id
+                    LEFT JOIN Liga on e.liga_liga_id=liga_id
+                    LEFT JOIN Tipo_liga on e.tipo_liga_idtipo_liga=idtipo_liga
+                    WHERE usuario_usuario_id='${sesUsu.getUsuarioId()}'
                 </sql:query>
                 <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>
                     <div class="container">
@@ -39,22 +40,19 @@
                                 <th>Liga</th>
                                 <th>Tipo de Liga</th>
                                 <th>Estado</th>
-
-                                <th colspan="2">Accion</th>
                                 </thead>
                             <c:forEach var="list" items="${equipoUsu.rows}">
                                 <form action="../ProcesoEquipo" method="GET">
                                     <tr>
-                                        <td>${list.getUsuario().getNombreUsuario()}</td>
-                                        <td>${list.getNombreEquipo()}</td>
-                                        <td>${list.getLiga().getNombreLiga()}</td>
-                                        <td>${list.getTipoLiga().getDescripcion()}</td>
+                                        <td>${list.nombre_equipo}</td>
+                                        <td>${list.nombre_liga !=null?list.nombre_liga:'Sin Liga'}</td>
+                                        <td>${list.descripcion}</td>
                                         <td> 
                                             <c:choose >
-                                                <c:when test="${list.getEstadoEquipo() == 1}">
+                                                <c:when test="${list.estado_equipo == 1}">
                                                     <p style="color: green" > activo</p>
                                                 </c:when>
-                                                <c:when test="${list.getEstadoEquipo() == 0}">
+                                                <c:when test="${list.estado_equipo == 0}">
                                                     <p style="color: red" > inactivo</p>
                                                 </c:when>
                                             </c:choose>
