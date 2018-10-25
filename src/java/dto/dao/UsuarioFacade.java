@@ -30,11 +30,12 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         super(Usuario.class);
     }
 
-    public boolean login(String correo, String pass) {
+    public Usuario login(String correo, String pass) {
         Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.correoUsuario= :correoUsuario and u.passUsuario= :passUsuario");
         query.setParameter("correoUsuario", correo);
         query.setParameter("passUsuario", pass);
-        return query.getResultList().size() > 0;
+        Usuario u =(Usuario) query.getSingleResult();
+        return u;
 
     }
 

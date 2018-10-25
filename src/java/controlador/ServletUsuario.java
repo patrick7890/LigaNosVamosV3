@@ -5,6 +5,7 @@
  */
 package controlador;
 
+import dto.dao.TipoUsuarioFacade;
 import dto.dao.UsuarioFacade;
 import dto.entidad.TipoUsuario;
 import dto.entidad.Usuario;
@@ -26,6 +27,8 @@ public class ServletUsuario extends HttpServlet {
 
     @EJB
     private UsuarioFacade usuarioFacade;
+    @EJB
+    private TipoUsuarioFacade TipoUFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -108,8 +111,8 @@ public class ServletUsuario extends HttpServlet {
         try {
             String correo = request.getParameter("txtCorreo");
             String pass = request.getParameter("txtPass");
-            boolean u = usuarioFacade.login(correo, pass);
-            if (u) {
+            Usuario u = usuarioFacade.login(correo, pass);
+            if (u!=null) {
                 request.getSession().setAttribute("sesUsu",u);
                 response.sendRedirect("Usuario/index.jsp");
             } else {
@@ -132,8 +135,9 @@ public class ServletUsuario extends HttpServlet {
             String correo = request.getParameter("txtCorreo");
             String pass = request.getParameter("txtPass");
             int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
-            Usuario usuario = new Usuario(correo, nombre, pass);
-            if (usuarioFacade.create(usuario)) {
+            TipoUsuario t= TipoUFacade.find(tipo);
+            Usuario u = new Usuario(null,correo, nombre, pass,t);
+            if (usuarioFacade.create(u)) {
                 String mensaje = "<div class='alert alert-success text-center'>Usuario Agregado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
             } else {

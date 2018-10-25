@@ -82,7 +82,17 @@ public class Usuario implements Serializable {
     }
 
     public Usuario(String correo, String nombre, String pass) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.correoUsuario = correo;
+        this.nombreUsuario = nombre;
+        this.passUsuario = pass;
+    }
+
+    public Usuario(Integer usuarioId, String correo, String nombre, String pass, TipoUsuario t) {
+        this.usuarioId = usuarioId;
+        this.correoUsuario = correo;
+        this.nombreUsuario = nombre;
+        this.passUsuario = pass;
+        this.tipoUsuarioIdTipoUsuario=t;
     }
 
     public Integer getUsuarioId() {
@@ -158,5 +168,5 @@ public class Usuario implements Serializable {
     public String toString() {
         return "dto.entidad.Usuario[ usuarioId=" + usuarioId + " ]";
     }
-    
+
 }
