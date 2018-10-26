@@ -50,15 +50,19 @@
                                 </thead>
 
                             <c:forEach var="list" items="${lista.rows}">
-                                <tr>
-                                    <td>${list.rut_integrante}</td>
-                                    <td><input class="form-control" value="${list.nombre_integrante}"/></td>
-                                    <td><input class="form-control" value="${list.Nick}"/></td>
-                                    <td>${list.nombre_equipo}</td>
-                                <input type="hidden" name="id" value="${list.Integrante_Id}"/>
-                                <td><button class="btn btn-primary" name="btnAccion" value="Actualizar">Actualizar</button></td>
-                                <td><button class="btn btn-danger" name="btnAccion" value="Eliminar">Eliminar</button></td>
-                                </tr>
+                                <form action="../ProcesoIntegrantes" method="GET">
+                                    <tr>
+                                        <td><input class="form-control" name="txtRut" value="${list.rut_integrante}"/></td>
+                                        <td><input class="form-control" name="txtNombre" value="${list.nombre_integrante}"/></td>
+                                        <td><input class="form-control" name="txtNick" value="${list.Nick}"/></td>
+                                        <td>${list.nombre_equipo}</td>
+                                    <input type="hidden" name="id" value="${list.Integrante_Id}"/>
+                                    <input type="hidden" name="ddlEquipo" value="${list.equipo_id}"/>
+                                    <input type="hidden" name="ddlEstado" value="${list.estado_equipo}"/>
+                                    <td><button class="btn btn-primary" name="btnAccion" value="Actualizar">Actualizar</button></td>
+                                    <td><button class="btn btn-danger" name="btnAccion" value="Eliminar">Eliminar</button></td>
+                                    </tr>
+                                </form>
                             </c:forEach>
                         </table>
                     </div>
@@ -88,13 +92,13 @@
                                     <td>
                                         <select class="form-control" name="ddlEquipo">
                                             <c:forEach var="lista" items="${et.rows}">
-                                                <option value="${lista.equipo_id}">${lista.nombre_equipo}</option>
+                                                <option value="${lista.equipo_id}" ${lista.equipo_id == list.equipo_equipo_id? 'selected' : ''}>${lista.nombre_equipo}</option>
                                             </c:forEach>
                                         </select>
                                     </td>
                                     <td><select class="form-control" name="ddlEstado">
-                                            <option value="1">Activo</option>
-                                            <option value="0">Inactivo</option>
+                                            <option value="1" ${list.estado_equipo == 1? 'selected' : ''}>Activo</option>
+                                            <option value="0" ${list.estado_equipo == 0? 'selected' : ''}>Inactivo</option>
                                         </select>
                                     </td>
                                     <input type="hidden" name="id" value="${list.Integrante_Id}"/>

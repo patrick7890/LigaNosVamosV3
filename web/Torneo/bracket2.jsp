@@ -16,7 +16,17 @@
     <title>March Madness Stock Matchup</title>
 </head>
 <body>
-
+    <c:choose>
+        <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
+            <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>
+        </c:when>
+        <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
+            <jsp:include page="../Menus/menu_Admin.jsp"></jsp:include>
+        </c:when>
+        <c:when test="${sesUsu==null}">
+            <jsp:include page="../Menus/menu.jsp"></jsp:include>
+        </c:when>
+    </c:choose>
     <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
                        url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
                        user = "juan"  password = "123456"/>
@@ -223,7 +233,7 @@
                                 <div class="round round round-two current" >
                                     <div class="round-details">Ronda 2<br/><span class="date">${f.fecha}</span></div>
                                         <c:forEach var="list" items="${result.rows}"end="3" varStatus="r2">
-                                            
+
                                         <ul class="matchup">
                                             <li class="team team-top"><c:out value="${fn:substringBefore(list.equipos, ',')}"/> </li>
                                             <li class="team team-bottom"><c:out value="${fn:substringAfter(list.equipos, ',')}"/></li>

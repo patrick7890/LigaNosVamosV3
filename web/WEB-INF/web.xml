@@ -16,6 +16,10 @@
         <servlet-name>ServletIntegrantes</servlet-name>
         <servlet-class>controlador.ServletIntegrantes</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletTorneo</servlet-name>
+        <servlet-class>controlador.ServletTorneo</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletEquipo</servlet-name>
         <url-pattern>/ProcesoEquipo</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>ServletIntegrantes</servlet-name>
         <url-pattern>/ProcesoIntegrantes</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletTorneo</servlet-name>
+        <url-pattern>/ProcesoTorneo</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
