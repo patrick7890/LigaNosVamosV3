@@ -107,7 +107,7 @@ public class ServletIntegrantes extends HttpServlet {
             int equipo = Integer.parseInt(request.getParameter("ddlEquipo"));
             Equipo e = equipoFacade.find(equipo);
 
-            for (int i = 1; i < 4; i++) {
+            for (int i = 1; i < 8; i++) {
                 String rut = request.getParameter("txtRut" + i);
                 String nombre = request.getParameter("txtNombre" + i);
                 String nick = request.getParameter("txtNick" + i);

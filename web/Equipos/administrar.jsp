@@ -16,7 +16,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
     </head>
-    <c:set  var="lista"  value="${li.listarTodo()}"/>
     <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
                        url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
                        user = "juan"  password = "123456"/>
@@ -24,7 +23,7 @@
         <c:choose>
             <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <sql:query var="equipoUsu" dataSource="${nosvamos}">
-                     SELECT * FROM Equipo e 
+                    SELECT * FROM Equipo e 
                     LEFT JOIN Usuario on  e.usuario_usuario_id=usuario_id
                     LEFT JOIN Liga on e.liga_liga_id=liga_id
                     LEFT JOIN Tipo_liga on e.tipo_liga_idtipo_liga=idtipo_liga

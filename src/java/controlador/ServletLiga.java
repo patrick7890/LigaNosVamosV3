@@ -58,6 +58,9 @@ public class ServletLiga extends HttpServlet {
             case "Actualizar":
                 actualizar(request, response);
                 break;
+            case "Iniciar":
+                iniciarLiga(request, response);
+                break;
             default:
                 redirectLiga(request, response);
         }
@@ -110,9 +113,9 @@ public class ServletLiga extends HttpServlet {
             String lugar = request.getParameter("txtLugar");
             int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
 
-            TipoLiga t=TligaFacade.find(tipo);
+            TipoLiga t = TligaFacade.find(tipo);
 
-            Liga l = new Liga(null,nombreLiga, fechaini, fechater, lugar,t);
+            Liga l = new Liga(null, nombreLiga, fechaini, fechater, lugar, t);
             if (ligaFacade.create(l)) {
                 String mensaje = "<div class='alert alert-success text-center'>Liga Agregado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
@@ -185,9 +188,9 @@ public class ServletLiga extends HttpServlet {
             String lugar = request.getParameter("txtLugar");
             int tipo = Integer.parseInt(request.getParameter("ddlTipo"));
 
-            TipoLiga t=TligaFacade.find(tipo);
-            Liga l = new Liga(null,nombreLiga, fechaini, fechater, lugar,t);
-            
+            TipoLiga t = TligaFacade.find(tipo);
+            Liga l = new Liga(null, nombreLiga, fechaini, fechater, lugar, t);
+
             if (ligaFacade.edit(l)) {
                 String mensaje = "<div class='alert alert-success text-center'>Liga Actualizado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
@@ -209,6 +212,16 @@ public class ServletLiga extends HttpServlet {
             String Liga = request.getParameter("idLiga");
             request.getSession().setAttribute("idliga", Liga);
             response.sendRedirect("Torneo/bracket2.jsp");
+        } catch (Exception e) {
+            response.sendRedirect("index.jsp");
+        }
+    }
+
+    private void iniciarLiga(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            String Liga = request.getParameter("idLiga");
+            request.getSession().setAttribute("idliga", Liga);
+            response.sendRedirect("Torneo/IniciarTorneo.jsp");
         } catch (Exception e) {
             response.sendRedirect("index.jsp");
         }

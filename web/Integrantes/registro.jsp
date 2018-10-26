@@ -52,31 +52,26 @@
                                 <c:forEach  varStatus="lis" begin = "1" end="5" >
                                     <tr>
                                         <td>Integrante ${lis.index}</td>
-                                        <td> <input type="text" value="" name="txtRut${lis.index}"  /></td>
-                                        <td> <input type="text" value="" name="txtNombre${lis.index}"  /></td>
-                                        <td> <input type="text" value="" name="txtNick${lis.index}" /></td>
-
-                                        <td>${list.getTipoLiga().getDescripcion()}</td>
+                                        <td> <input class="form-control" type="text" value="" name="txtRut${lis.index}"  /></td>
+                                        <td> <input class="form-control" type="text" value="" name="txtNombre${lis.index}"  /></td>
+                                        <td> <input class="form-control" type="text" value="" name="txtNick${lis.index}" /></td>
                                     </tr>
                                 </c:forEach>
                                 <tr>
                                     <td>Integrante 6</td>
-                                    <td> <input type="text" value="" name="txtRut6" /></td>
-                                    <td> <input type="text" value="" name="txtNombre6" /></td>
-                                    <td> <input type="text" value="" name="txtNick6" /></td>
-
-                                    <td>${list.getTipoLiga().getDescripcion()}</td>
+                                    <td> <input class="form-control" type="text" value="" name="txtRut6" /></td>
+                                    <td> <input class="form-control" type="text" value="" name="txtNombre6" /></td>
+                                    <td> <input class="form-control" type="text" value="" name="txtNick6" /></td>
 
                                 </tr>
                                 <tr>
                                     <td>Integrante 7</td>
-                                    <td> <input type="text" value="" name="txtRut7" /></td>
+                                    <td> <input class="form-control" type="text" value="" name="txtRut7" /></td>
 
-                                    <td> <input type="text" value="" name="txtNombre7" /></td>
+                                    <td> <input class="form-control" type="text" value="" name="txtNombre7" /></td>
 
-                                    <td> <input type="text" value="" name="txtNick7" /></td>
+                                    <td> <input class="form-control" type="text" value="" name="txtNick7" /></td>
 
-                                    <td>${list.getTipoLiga().getDescripcion()}</td>
 
                                 </tr>
 
@@ -89,7 +84,7 @@
                             </table>
                             <div class="text-center">
 
-                                <select name="ddlEquipo">
+                                <select name="ddlEquipo" class="form-control-sm">
                                     <c:forEach var="lista" items="${equipoUsu.rows}" >
                                         <option value="${lista.equipo_id}">${lista.nombre_equipo} </option>
                                     </c:forEach>

@@ -46,28 +46,34 @@
             <div class="row">
                 <c:forEach var="list" items="${ligas.rows}">
                     <div class=" col-12 col-sm-12 col-md-6 col-xl-4 mt-2 " style="height: 100px" >
-                        <a href="ProcesoLiga?btnAccion=null&idLiga=${list.liga_id}">
-                            <div class="thumbnail group group-thumbnail"  style="height: 100px" >
-                                <style>
-                                    .group-thumbnail{
-                                        background-image: url('Recursos/img/Dota.PNG');
-                                        background-size: cover;
-                                        width: 60%;
-                                        height: 60%;
-                                        content: "";
-                                        position: absolute;
-                                        background-position: 50%;
-                                        z-index: 0;
-                                    }
-                                </style>
-                                <div class="thumbnail-title">
-                                    <h4 class="text-truncate" title="${list.nombre_liga}" ><c:out value="${list.nombre_liga}"/></h4>
-                                </div>
-                                <span class="">${list.fecha_inicio}</span>
-                                <span class="">${list.fecha_termino}</span>
+                        <div class="thumbnail group group-thumbnail"  style="height: 100px" >
+
+                            <style>
+                                .group-thumbnail{
+                                    background-image: url('Recursos/img/Dota.PNG');
+                                    background-size: cover;
+                                    width: 60%;
+                                    height: 60%;
+                                    content: "";
+                                    position: absolute;
+                                    background-position: 50%;
+                                    z-index: 0;
+                                }
+                            </style>
+                            <div class="thumbnail-title">
+                                <a href="ProcesoLiga?btnAccion=null&idLiga=${list.liga_id}">
+                                    <h4 class="text-truncate" ><c:out value="${list.nombre_liga}"/></h4>
+                                    <span class="">${list.fecha_inicio}</span>
+                                    <span class="">${list.fecha_termino}</span>
+                                </a>
                             </div>
-                        </a>
+                            <c:if test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
+                                <a href="ProcesoLiga?btnAccion=Iniciar&idLiga=${list.liga_id}">Iniciar Liga</a>
+                            </c:if>
+                        </div>
+
                     </div>
+
                 </c:forEach>
             </div>
         </div>
