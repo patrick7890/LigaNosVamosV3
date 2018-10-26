@@ -1,3 +1,4 @@
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:if test="${sesUsu==null}">
     <c:redirect url="/Index.jsp"></c:redirect>
@@ -16,15 +17,26 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
     </head>
-    <body><jsp:useBean id="li" class="DAO.DAOIntegrantes" scope="page" ></jsp:useBean>
-        <c:set  var="lista"  value="${li.listarTodo()}"/>
-        <jsp:useBean id="equ" class="DAO.DAOEquipo" scope="page" ></jsp:useBean>
-        <c:set  var="correo"  value="${sesUsu.getCorreoUsuario()}"/>
-        <c:set  var="equipo"  value="${equ.listarEquipoUsuario(correo)}"/>
-        <c:set  var="et"  value="${equ.listarTodo()}"/>
+    <body>
+
+
+        <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
+                           url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
+                           user = "juan"  password = "123456"/>
+
+        <sql:query var="lista" dataSource="${nosvamos}">
+            SELECT * FROM integrantes i JOIN equipo e on i.equipo_equipo_id=e.equipo_id WHERE e.usuario_usuario_id = ${sesUsu.getUsuarioId()}
+        </sql:query>
+
+        <sql:query var="lisa" dataSource="${nosvamos}">
+            SELECT * FROM integrantes i JOIN equipo e on i.equipo_equipo_id=e.equipo_id
+        </sql:query>
+        <sql:query var="et" dataSource="${nosvamos}">
+            SELECT * FROM equipo 
+        </sql:query>
 
         <c:choose>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()>2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>
                     <div class="container">
                         <div class="row">
@@ -36,22 +48,22 @@
                                 <th>Equipo</th>
                                 <th colspan="2">Accion</th>
                                 </thead>
-                                
-                            <c:forEach var="list" items="${lista}">
+
+                            <c:forEach var="list" items="${lista.rows}">
                                 <tr>
-                                    <td>${list.getRutIntegrante()}</td>
-                                    <td><input class="form-control" value="${list.getNombreIntegrante()}"/></td>
-                                    <td><input class="form-control" value="${list.getNick()}"/></td>
-                                    <td>${list.getEquipo().getNombreEquipo()}</td>
-                                    <td><button class="btn btn-primary" value="${list.getRutIntegrante()}">Actualizar</button></td>
-                                    <td><button class="btn btn-danger" value="${list.getRutIntegrante()}">Eliminar</button></td>
+                                    <td>${list.rut_integrante}</td>
+                                    <td><input class="form-control" value="${list.nombre_integrante}"/></td>
+                                    <td><input class="form-control" value="${list.Nick}"/></td>
+                                    <td>${list.nombre_equipo}</td>
+                                    <td><button class="btn btn-primary" value="${list.integrante_id}">Actualizar</button></td>
+                                    <td><button class="btn btn-danger" value="${list.integrante_id}">Eliminar</button></td>
                                 </tr>
                             </c:forEach>
                         </table>
                     </div>
                 </div>
             </c:when>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()<=2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
                 <jsp:include page="../Menus/menu_Admin.jsp"></jsp:include>
 
                     <div class="container">
@@ -65,17 +77,17 @@
                                 <th>estado</th>
                                 <th colspan="2">Accion</th>
                                 </thead>
-                            <c:forEach var="list" items="${lista}">
+                            <c:forEach var="list" items="${lisa.rows}">
 
                                 <tr>
                                 <form action="../ProcesoIntegrantes" method="GET">
-                                    <td><input class="form-control" name="txtRut" value="${list.getRutIntegrante()}"/></td>
-                                    <td><input class="form-control" name="txtNombre" value="${list.getNombreIntegrante()}"/></td>
-                                    <td><input class="form-control" name="txtNick" value="${list.getNick()}"/></td>
+                                    <td><input class="form-control" name="txtRut" value="${list.rut_integrante}"/></td>
+                                    <td><input class="form-control" name="txtNombre" value="${list.nombre_integrante}"/></td>
+                                    <td><input class="form-control" name="txtNick" value="${list.Nick}"/></td>
                                     <td>
                                         <select class="form-control" name="ddlEquipo">
-                                            <c:forEach var="lista" items="${et}">
-                                                <option value="${lista.getNombreEquipo()}">${lista.getNombreEquipo()}</option>
+                                            <c:forEach var="lista" items="${et.rows}">
+                                                <option value="${lista.equipo_id}">${lista.nombre_equipo}</option>
                                             </c:forEach>
                                         </select>
                                     </td>
@@ -84,7 +96,7 @@
                                             <option value="0">Inactivo</option>
                                         </select>
                                     </td>
-                                    <input type="hidden" value="${list.getRutIntegrante()}"/>
+                                    <input type="hidden" value="${list.Integrante_Id}"/>
                                     <td><button class="btn btn-primary" name="btnAccion" value="Actualizar">Actualizar</button></td>
                                     <td><button class="btn btn-danger" name="btnAccion" value="Eliminar">Eliminar</button></td>
                                 </form>

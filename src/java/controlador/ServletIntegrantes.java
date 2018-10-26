@@ -7,6 +7,7 @@ package controlador;
 
 import dto.dao.IntegrantesFacade;
 import dto.dao.EquipoFacade;
+import dto.entidad.Equipo;
 import dto.entidad.Integrantes;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,11 +27,10 @@ public class ServletIntegrantes extends HttpServlet {
 
     @EJB
     private EquipoFacade equipoFacade;
-    
+
     @EJB
     private IntegrantesFacade integranteFacade;
-    
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,7 +42,7 @@ public class ServletIntegrantes extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String opcion = request.getParameter("btnAccion");
 
         switch (opcion) {
@@ -103,10 +103,10 @@ public class ServletIntegrantes extends HttpServlet {
     }// </editor-fold>
 
     private void agregar(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       try {
-            String equipo = request.getParameter("ddlEquipo");
-            int idEquipo = equipoFacade.buscarPorNombre(equipo);
-            
+        try {
+            int equipo = Integer.parseInt(request.getParameter("ddlEquipo"));
+            Equipo e = equipoFacade.find(equipo);
+
             for (int i = 1; i < 4; i++) {
                 String rut = request.getParameter("txtRut" + i);
                 String nombre = request.getParameter("txtNombre" + i);
@@ -114,20 +114,19 @@ public class ServletIntegrantes extends HttpServlet {
                 byte estado = 1;
                 if (rut != "" || nombre != "" || nick != "") {
 
-                    Integrantes in = new Integrantes(rut, nombre, nick, estado, idEquipo);
-                    integranteFacade.create(in);
-                    
-//                    if (integranteFacade.create(in)) {
-//                        //imagen(request, response, in);
-//
-//                        String mensaje = "<div class='alert alert-success text-center'>Intengrante Agregado</div>";
-//                        request.getSession().setAttribute("mensaje", mensaje);
-//
-//                    } else {
-//                        String mensaje = "<div class='alert alert-danger text-center'>No se Pudo Registar</div>";
-//                        request.getSession().setAttribute("mensaje", mensaje);
-//                    }
+                    Integrantes in = new Integrantes(null,rut, nombre, nick, estado, e);
+                   
 
+                    if (integranteFacade.create(in)) {
+                        //imagen(request, response, in);
+
+                        String mensaje = "<div class='alert alert-success text-center'>Intengrante Agregado</div>";
+                        request.getSession().setAttribute("mensaje", mensaje);
+
+                    } else {
+                        String mensaje = "<div class='alert alert-danger text-center'>No se Pudo Registar</div>";
+                        request.getSession().setAttribute("mensaje", mensaje);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -137,12 +136,11 @@ public class ServletIntegrantes extends HttpServlet {
         } finally {
             response.sendRedirect("Integrantes/registro.jsp");
         }
-        
+
     }
 
     private void eliminar(HttpServletRequest request, HttpServletResponse response) {
-       
-        
+
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -151,18 +149,18 @@ public class ServletIntegrantes extends HttpServlet {
     }
 
     private void actualizar(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+
         try {
             String rut = request.getParameter("txtRut");
             String nombre = request.getParameter("txtNombre");
             String nick = request.getParameter("txtNick");
             byte estado = Byte.parseByte(request.getParameter("ddlEstado"));
-            String equipo = request.getParameter("ddlEquipo");
-            int idEquipo = equipoFacade.buscarPorNombre(nombre);
-           
+           int equipo = Integer.parseInt(request.getParameter("ddlEquipo"));
+            Equipo e = equipoFacade.find(equipo);
+
             if (rut != "" || nombre != "" || nick != "") {
 
-                Integrantes in = new Integrantes(rut, nombre, nick, estado, idEquipo);
+                Integrantes in = new Integrantes(null,rut, nombre, nick, estado, e);
 
                 if (integranteFacade.edit(in)) {
                     //imagen(request, response, in);
@@ -183,7 +181,7 @@ public class ServletIntegrantes extends HttpServlet {
         } finally {
             response.sendRedirect("Equipos/administrar.jsp");
         }
-        
+
     }
 
 }

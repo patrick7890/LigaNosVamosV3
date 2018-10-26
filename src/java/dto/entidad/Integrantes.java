@@ -34,8 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Integrantes.findByRutIntegrante", query = "SELECT i FROM Integrantes i WHERE i.rutIntegrante = :rutIntegrante")
     , @NamedQuery(name = "Integrantes.findByNombreIntegrante", query = "SELECT i FROM Integrantes i WHERE i.nombreIntegrante = :nombreIntegrante")
     , @NamedQuery(name = "Integrantes.findByNick", query = "SELECT i FROM Integrantes i WHERE i.nick = :nick")
-    , @NamedQuery(name = "Integrantes.findByEstadoInt", query = "SELECT i FROM Integrantes i WHERE i.estadoInt = :estadoInt")
-    , @NamedQuery(name = "Integrantes.findByEquipoIdEquipo", query = "SELECT i FROM Integrantes i WHERE i.equipoIdEquipo = :equipoIdEquipo")})
+    , @NamedQuery(name = "Integrantes.findByEstadoInt", query = "SELECT i FROM Integrantes i WHERE i.estadoInt = :estadoInt")})
 public class Integrantes implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -63,10 +62,6 @@ public class Integrantes implements Serializable {
     @NotNull
     @Column(name = "estado_int")
     private short estadoInt;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "equipo_id_equipo")
-    private int equipoIdEquipo;
     @JoinColumn(name = "equipo_equipo_id", referencedColumnName = "equipo_id")
     @ManyToOne(optional = false)
     private Equipo equipoEquipoId;
@@ -81,17 +76,20 @@ public class Integrantes implements Serializable {
         this.integranteId = integranteId;
     }
 
-    public Integrantes(Integer integranteId, String rutIntegrante, String nombreIntegrante, String nick, short estadoInt, int equipoIdEquipo) {
+    public Integrantes(Integer integranteId, String rutIntegrante, String nombreIntegrante, String nick, short estadoInt) {
         this.integranteId = integranteId;
         this.rutIntegrante = rutIntegrante;
         this.nombreIntegrante = nombreIntegrante;
         this.nick = nick;
         this.estadoInt = estadoInt;
-        this.equipoIdEquipo = equipoIdEquipo;
     }
-
-    public Integrantes(String rut, String nombre, String nick, byte estado, int idEquipo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public Integrantes(Integer integranteId,String rut, String nombre, String nick, byte estado, Equipo e) {
+        this.rutIntegrante = rut;
+        this.nombreIntegrante = nombre;
+        this.nick = nick;
+        this.estadoInt = estado;
+        this.equipoEquipoId = e;
     }
 
     public Integer getIntegranteId() {
@@ -132,14 +130,6 @@ public class Integrantes implements Serializable {
 
     public void setEstadoInt(short estadoInt) {
         this.estadoInt = estadoInt;
-    }
-
-    public int getEquipoIdEquipo() {
-        return equipoIdEquipo;
-    }
-
-    public void setEquipoIdEquipo(int equipoIdEquipo) {
-        this.equipoIdEquipo = equipoIdEquipo;
     }
 
     public Equipo getEquipoEquipoId() {

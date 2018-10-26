@@ -45,7 +45,7 @@
                     <form action="../ProcesoLiga" method="GET" enctype = "multipart/form-data">
                         <div class="card" style="">
                             <div class="card-body">
-                                <h1 class="text-center">Registro de Usuarios</h1>
+                                <h1 class="text-center">Registro de Ligas</h1>
                                 <hr>
                                 <div class="form-group">
                                     <label>Nombre De La Liga: </label>

@@ -1,3 +1,4 @@
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:if test="${sesUsu==null}">
     <c:redirect url="/Index.jsp"></c:redirect>
@@ -19,14 +20,22 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <jsp:useBean id="equ" class="DAO.DAOEquipo" scope="page" ></jsp:useBean>
-        <jsp:useBean id="liga" class="DAO.DAOLiga" scope="page" ></jsp:useBean>
-        <c:set  var="equipo"  value="${equ.listarTodo()}"/>
-        <c:set  var="li"  value="${liga.listarTodo()}"/>
-        <c:set var="correo" value="${sesUsu.getCorreoUsuario()}"/> 
-        <c:set  var="equipoUsu"  value="${equ.listarEquipoUsuario(correo)}"/>
+
+        <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
+                           url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
+                           user = "juan"  password = "123456"/>
+
+        <sql:query var="equipo" dataSource="${nosvamos}">
+            SELECT * FROM equipo
+        </sql:query>
+
+        <sql:query var="equipoUsu" dataSource="${nosvamos}">
+            SELECT * FROM equipo e WHERE e.usuario_usuario_id = ${sesUsu.getUsuarioId()}
+        </sql:query>
+
+
         <c:choose>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()>2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>
                     <div class="container">
                         <div class="row justify-content-center">
@@ -48,9 +57,6 @@
                                         <td> <input type="text" value="" name="txtNick${lis.index}" /></td>
 
                                         <td>${list.getTipoLiga().getDescripcion()}</td>
-
-                                    <input type="hidden" value="${list.getNombreLiga()}" name="txtNombreLiga" />
-                                    <input type="hidden" value="${list.getTipoLiga().getIdtipoLiga()}" name="txtTipoLiga" />
                                     </tr>
                                 </c:forEach>
                                 <tr>
@@ -61,8 +67,6 @@
 
                                     <td>${list.getTipoLiga().getDescripcion()}</td>
 
-                                <input type="hidden" value="${list.getNombreLiga()}" name="txtNombreLiga" />
-                                <input type="hidden" value="${list.getTipoLiga().getIdtipoLiga()}" name="txtTipoLiga" />
                                 </tr>
                                 <tr>
                                     <td>Integrante 7</td>
@@ -74,11 +78,7 @@
 
                                     <td>${list.getTipoLiga().getDescripcion()}</td>
 
-                                <input type="hidden" value="${list.getNombreLiga()}" name="txtNombreLiga" />
-                                <input type="hidden" value="${list.getTipoLiga().getIdtipoLiga()}" name="txtTipoLiga" />
                                 </tr>
-
-
 
                                 <input type="hidden" value="${sesUsu.getCorreoUsuario()}" name="correo" />
 
@@ -90,8 +90,8 @@
                             <div class="text-center">
 
                                 <select name="ddlEquipo">
-                                    <c:forEach var="lista" items="${equipoUsu}" >
-                                        <option value="${lista.getNombreEquipo()}">${lista.getNombreEquipo()} </option>
+                                    <c:forEach var="lista" items="${equipoUsu.rows}" >
+                                        <option value="${lista.equipo_id}">${lista.nombre_equipo} </option>
                                     </c:forEach>
                                 </select> 
                                 <button class="btn btn-primary" value="Registar" name="btnAccion">Inscribir</button>

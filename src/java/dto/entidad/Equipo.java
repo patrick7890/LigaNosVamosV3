@@ -39,6 +39,11 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Equipo.findByEstadoEquipo", query = "SELECT e FROM Equipo e WHERE e.estadoEquipo = :estadoEquipo")})
 public class Equipo implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipoEquipoId")
+    private List<Match> matchList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipoEquipoId")
+    private List<Integrantes> integrantesList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,7 +63,7 @@ public class Equipo implements Serializable {
     @ManyToOne
     private Imagen imagenIdImagen;
     @JoinColumn(name = "liga_liga_id", referencedColumnName = "liga_id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Liga ligaLigaId;
     @JoinColumn(name = "tipo_liga_idtipo_liga", referencedColumnName = "idtipo_liga")
     @ManyToOne(optional = false)
@@ -66,10 +71,6 @@ public class Equipo implements Serializable {
     @JoinColumn(name = "usuario_usuario_id", referencedColumnName = "usuario_id")
     @ManyToOne(optional = false)
     private Usuario usuarioUsuarioId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipoEquipoId")
-    private List<Match> matchList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "equipoEquipoId")
-    private List<Integrantes> integrantesList;
 
     public Equipo() {
     }
@@ -82,13 +83,6 @@ public class Equipo implements Serializable {
         this.equipoId = equipoId;
         this.nombreEquipo = nombreEquipo;
         this.estadoEquipo = estadoEquipo;
-    }
-
-    public Equipo(String nombre, byte estado, Usuario usu, TipoLiga tipo) {
-        this.nombreEquipo = nombre;
-        this.estadoEquipo = estado;
-        this.usuarioUsuarioId = usu;
-        this.tipoLigaIdtipoLiga = tipo;
     }
 
     public Equipo(Integer id, String nombre, byte estado, Usuario u, TipoLiga t) {
@@ -155,24 +149,6 @@ public class Equipo implements Serializable {
         this.usuarioUsuarioId = usuarioUsuarioId;
     }
 
-    @XmlTransient
-    public List<Match> getMatchList() {
-        return matchList;
-    }
-
-    public void setMatchList(List<Match> matchList) {
-        this.matchList = matchList;
-    }
-
-    @XmlTransient
-    public List<Integrantes> getIntegrantesList() {
-        return integrantesList;
-    }
-
-    public void setIntegrantesList(List<Integrantes> integrantesList) {
-        this.integrantesList = integrantesList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -196,6 +172,24 @@ public class Equipo implements Serializable {
     @Override
     public String toString() {
         return "dto.entidad.Equipo[ equipoId=" + equipoId + " ]";
+    }
+
+    @XmlTransient
+    public List<Match> getMatchList() {
+        return matchList;
+    }
+
+    public void setMatchList(List<Match> matchList) {
+        this.matchList = matchList;
+    }
+
+    @XmlTransient
+    public List<Integrantes> getIntegrantesList() {
+        return integrantesList;
+    }
+
+    public void setIntegrantesList(List<Integrantes> integrantesList) {
+        this.integrantesList = integrantesList;
     }
 
 }
