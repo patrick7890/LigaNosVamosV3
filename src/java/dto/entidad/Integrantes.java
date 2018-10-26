@@ -83,8 +83,9 @@ public class Integrantes implements Serializable {
         this.nick = nick;
         this.estadoInt = estadoInt;
     }
-    
-    public Integrantes(Integer integranteId,String rut, String nombre, String nick, byte estado, Equipo e) {
+
+    public Integrantes(Integer integranteId, String rut, String nombre, String nick, byte estado, Equipo e) {
+        this.integranteId = integranteId;
         this.rutIntegrante = rut;
         this.nombreIntegrante = nombre;
         this.nick = nick;
@@ -172,5 +173,5 @@ public class Integrantes implements Serializable {
     public String toString() {
         return "dto.entidad.Integrantes[ integranteId=" + integranteId + " ]";
     }
-    
+
 }

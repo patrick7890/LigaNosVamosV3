@@ -55,8 +55,9 @@
                                     <td><input class="form-control" value="${list.nombre_integrante}"/></td>
                                     <td><input class="form-control" value="${list.Nick}"/></td>
                                     <td>${list.nombre_equipo}</td>
-                                    <td><button class="btn btn-primary" value="${list.integrante_id}">Actualizar</button></td>
-                                    <td><button class="btn btn-danger" value="${list.integrante_id}">Eliminar</button></td>
+                                <input type="hidden" name="id" value="${list.Integrante_Id}"/>
+                                <td><button class="btn btn-primary" name="btnAccion" value="Actualizar">Actualizar</button></td>
+                                <td><button class="btn btn-danger" name="btnAccion" value="Eliminar">Eliminar</button></td>
                                 </tr>
                             </c:forEach>
                         </table>
@@ -96,7 +97,7 @@
                                             <option value="0">Inactivo</option>
                                         </select>
                                     </td>
-                                    <input type="hidden" value="${list.Integrante_Id}"/>
+                                    <input type="hidden" name="id" value="${list.Integrante_Id}"/>
                                     <td><button class="btn btn-primary" name="btnAccion" value="Actualizar">Actualizar</button></td>
                                     <td><button class="btn btn-danger" name="btnAccion" value="Eliminar">Eliminar</button></td>
                                 </form>

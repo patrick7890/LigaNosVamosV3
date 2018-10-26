@@ -114,8 +114,7 @@ public class ServletIntegrantes extends HttpServlet {
                 byte estado = 1;
                 if (rut != "" || nombre != "" || nick != "") {
 
-                    Integrantes in = new Integrantes(null,rut, nombre, nick, estado, e);
-                   
+                    Integrantes in = new Integrantes(null, rut, nombre, nick, estado, e);
 
                     if (integranteFacade.create(in)) {
                         //imagen(request, response, in);
@@ -139,9 +138,38 @@ public class ServletIntegrantes extends HttpServlet {
 
     }
 
-    private void eliminar(HttpServletRequest request, HttpServletResponse response) {
+    private void eliminar(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            String rut = request.getParameter("txtRut");
+            String nombre = request.getParameter("txtNombre");
+            String nick = request.getParameter("txtNick");
+            byte estado = Byte.parseByte(request.getParameter("ddlEstado"));
+            int equipo = Integer.parseInt(request.getParameter("ddlEquipo"));
+            Integer id = Integer.parseInt(request.getParameter("id"));
+            Equipo e = equipoFacade.find(equipo);
+
+            Integrantes in = new Integrantes(id, rut, nombre, nick, estado, e);
+
+            if (integranteFacade.remove(in)) {
+                //imagen(request, response, in);
+
+                String mensaje = "<div class='alert alert-success text-center'>Intengrante Eliminado</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+
+            } else {
+                String mensaje = "<div class='alert alert-danger text-center'>No se Pudo Eliminar</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+            }
+
+        } catch (Exception e) {
+            String mensaje = "<div class='alert alert-danger text-center'>Ocurrio un error insesperado " + e.getMessage() + "</div>";
+            request.getSession().setAttribute("mensaje", mensaje);
+
+        } finally {
+            response.sendRedirect("Integrantes/administrar.jsp");
+        }
+
     }
 
     private void listar(HttpServletRequest request, HttpServletResponse response) {
@@ -155,12 +183,13 @@ public class ServletIntegrantes extends HttpServlet {
             String nombre = request.getParameter("txtNombre");
             String nick = request.getParameter("txtNick");
             byte estado = Byte.parseByte(request.getParameter("ddlEstado"));
-           int equipo = Integer.parseInt(request.getParameter("ddlEquipo"));
+            int equipo = Integer.parseInt(request.getParameter("ddlEquipo"));
+            Integer id = Integer.parseInt(request.getParameter("id"));
             Equipo e = equipoFacade.find(equipo);
 
             if (rut != "" || nombre != "" || nick != "") {
 
-                Integrantes in = new Integrantes(null,rut, nombre, nick, estado, e);
+                Integrantes in = new Integrantes(id, rut, nombre, nick, estado, e);
 
                 if (integranteFacade.edit(in)) {
                     //imagen(request, response, in);
@@ -179,7 +208,7 @@ public class ServletIntegrantes extends HttpServlet {
             request.getSession().setAttribute("mensaje", mensaje);
 
         } finally {
-            response.sendRedirect("Equipos/administrar.jsp");
+            response.sendRedirect("Integrantes/administrar.jsp");
         }
 
     }
