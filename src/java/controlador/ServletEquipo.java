@@ -211,10 +211,12 @@ public class ServletEquipo extends HttpServlet {
     private void inscribir(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Integer id = Integer.parseInt(request.getParameter("ddlEquipo"));
-            int idLiga = Integer.parseInt(request.getParameter("txtNombreLiga"));
-            Liga l = ligaFacade.find(idLiga);
-            Equipo eq = new Equipo(id, l);
-            if (equipoFacade.edit(eq)) {
+            Integer idliga = Integer.parseInt(request.getParameter("idLiga"));
+            Liga l = ligaFacade.find(idliga);
+            Equipo equipo = equipoFacade.find(id);
+            equipo.setLigaLigaId(l);
+            
+            if (equipoFacade.edit(equipo)) {
                 String mensaje = "<div class='alert alert-success text-center'>Equipo Actualizado</div>";
                 request.getSession().setAttribute("mensaje", mensaje);
             } else {

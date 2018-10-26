@@ -71,8 +71,7 @@
                                                 <p>No Clasifica</p>
                                             </c:if>
                                         </td>
-                                    <input type="hidden" value="${list.liga_liga_id}" name="idLiga" />
-                                    <input type="hidden" value="${list.tipo_liga_idtipo_liga}" name="IdTipo" />
+                                    <input type="hidden" value="${list.liga_id}" name="idLiga" />
                                     <td><button class="btn btn-primary" value="Inscribir" name="btnAccion">Inscribir</button></td>
                                     </tr>
                                     <input type="hidden" value="${sesUsu.getUsuarioId()}" name="idUsu" />
