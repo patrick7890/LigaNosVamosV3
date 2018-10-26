@@ -5,10 +5,9 @@
  */
 package controlador;
 
-import dto.dao.EquipoFacade;
-import dto.dao.TipoLigaFacade;
-import dto.dao.UsuarioFacade;
+import dto.dao.*;
 import dto.entidad.Equipo;
+import dto.entidad.Liga;
 import dto.entidad.TipoLiga;
 import dto.entidad.Usuario;
 import java.io.IOException;
@@ -29,7 +28,8 @@ public class ServletEquipo extends HttpServlet {
 
     @EJB
     private UsuarioFacade usuarioFacade;
-
+    @EJB
+    private LigaFacade ligaFacade;
     @EJB
     private EquipoFacade equipoFacade;
     @EJB
@@ -208,8 +208,25 @@ public class ServletEquipo extends HttpServlet {
 //        }
     }
 
-    private void inscribir(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void inscribir(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Integer id = Integer.parseInt(request.getParameter("ddlEquipo"));
+            int idLiga = Integer.parseInt(request.getParameter("txtNombreLiga"));
+            Liga l = ligaFacade.find(idLiga);
+            Equipo eq = new Equipo(id, l);
+            if (equipoFacade.edit(eq)) {
+                String mensaje = "<div class='alert alert-success text-center'>Equipo Actualizado</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+            } else {
+                String mensaje = "<div class='alert alert-danger text-center'>No se Pudo Actualizar</div>";
+                request.getSession().setAttribute("mensaje", mensaje);
+            }
+        } catch (Exception e) {
+            String mensaje = "<div class='alert alert-danger text-center'>Ocurrio un error insesperado" + e.getMessage() + "</div>";
+            request.getSession().setAttribute("mensaje", mensaje);
+        } finally {
+            response.sendRedirect("Ligas/inscribir.jsp");
+        }
     }
 
 }

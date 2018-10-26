@@ -93,6 +93,11 @@ public class Equipo implements Serializable {
         this.tipoLigaIdtipoLiga = t;
     }
 
+    public Equipo(Integer id, Liga l) {
+        this.equipoId = id;
+        this.ligaLigaId=l;
+    }
+
     public Integer getEquipoId() {
         return equipoId;
     }

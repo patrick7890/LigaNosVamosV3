@@ -21,15 +21,20 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <jsp:useBean id="equ" class="DAO.DAOEquipo" scope="page" ></jsp:useBean>
-        <jsp:useBean id="liga" class="DAO.DAOLiga" scope="page" ></jsp:useBean>
-        <c:set  var="equipo"  value="${equ.listarTodo()}"/>
-        <c:set  var="li"  value="${liga.listarTodo()}"/>
-        <c:set var="correo" value="${sesUsu.getCorreoUsuario()}"/> 
-        <c:set  var="equipoUsu"  value="${equ.listarEquipoUsuario(correo)}"/>
-        
+        <sql:setDataSource var = "nosvamos" driver = "com.mysql.jdbc.Driver"
+                           url = "jdbc:mysql://localhost:3306/nosvamosv2?zeroDateTimeBehavior=convertToNull"
+                           user = "juan"  password = "123456"/>
+
+        <sql:query var="equ" dataSource="${nosvamos}">
+            SELECT * FROM equipo
+        </sql:query>
+        <jsp:useBean id="now" class="java.util.Date" />
+        <fmt:formatDate var="date" value="${now}" pattern="yyyy-MM-dd" />
+        <sql:query var="liga" dataSource="${nosvamos}">
+            SELECT * FROM Liga l  JOIN Tipo_liga t on l.tipo_liga_idtipo_liga=t.idtipo_liga where  fecha_termino>='${date}'
+        </sql:query>
         <c:choose>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()>2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()>2}">
                 <jsp:include page="../Menus/menu_Usuario.jsp"></jsp:include>
                     <div class="container">
                         <div class="row">
@@ -40,30 +45,44 @@
                                 <th>Equipo</th>
                                 <th></th>
                                 </thead>
-                            <c:forEach var="list" items="${li}">
+                            <c:forEach var="list" items="${liga.rows}">
+                                <sql:query var="equipoUsu" dataSource="${nosvamos}">
+                                    SELECT * FROM equipo where usuario_usuario_id=${sesUsu.getUsuarioId()} 
+                                    AND tipo_liga_idtipo_liga=${list.tipo_liga_idtipo_liga}
+                                    AND estado_equipo=1
+                                </sql:query>
                                 <form action="../ProcesoEquipo" method="GET" >
                                     <tr>
-                                        <td> ${list.getNombreLiga()}</td>
+                                        <td> ${list.nombre_liga}</td>
 
-                                        <td>${list.getTipoLiga().getDescripcion()}</td>
-                                        <td> <select name="ddlEquipo">
-                                                <c:forEach var="lista" items="${equipoUsu}" >
-                                                    <option value="${lista.getNombreEquipo()}">${lista.getNombreEquipo()} </option>
-                                                </c:forEach>
-                                            </select> 
+                                        <td>${list.Descripcion}</td>
+                                        <td>
+                                            <c:if test="${equipoUsu.rowCount>0}">
+                                                <select name="ddlEquipo">
+
+
+                                                    <c:forEach var="lista" items="${equipoUsu.rows}" varStatus="e">
+                                                        <option value="${lista.equipo_id}">${lista.nombre_equipo} </option>
+                                                    </c:forEach>
+
+                                                </select> 
+                                            </c:if>
+                                            <c:if test="${equipoUsu.rowCount==0}">
+                                                <p>No Clasifica</p>
+                                            </c:if>
                                         </td>
-                                    <input type="hidden" value="${list.getNombreLiga()}" name="txtNombreLiga" />
-                                    <input type="hidden" value="${list.getTipoLiga().getIdtipoLiga()}" name="txtTipoLiga" />
+                                    <input type="hidden" value="${list.liga_liga_id}" name="idLiga" />
+                                    <input type="hidden" value="${list.tipo_liga_idtipo_liga}" name="IdTipo" />
                                     <td><button class="btn btn-primary" value="Inscribir" name="btnAccion">Inscribir</button></td>
                                     </tr>
-                                    <input type="hidden" value="${sesUsu.getCorreoUsuario()}" name="correo" />
+                                    <input type="hidden" value="${sesUsu.getUsuarioId()}" name="idUsu" />
                                 </form>
                             </c:forEach>
                         </table>
                     </div>
                 </div>
             </c:when>
-            <c:when test="${sesUsu.getTipoUsuario().getIdTipoUsuario()<=2}">
+            <c:when test="${sesUsu.getTipoUsuarioIdTipoUsuario().getIdTipoUsuario()<=2}">
                 <jsp:include page="../Menus/menu_Admin.jsp"></jsp:include>
 
                     <div class="container">
